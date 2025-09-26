@@ -4,6 +4,7 @@ import { Octokit } from 'octokit';
 import { UserDisplay } from './userDisplay';
 import { RepoList } from './RepoList';
 import { NotFoundPage } from './NotFoundPage';
+import { NavButtons } from './NavButtons';
 
 export const FoundUser = () => {
 
@@ -97,6 +98,10 @@ export const FoundUser = () => {
                 </>
             )
                 : <NotFoundPage />}
+            <NavButtons
+                repos={currentRepos}
+                setRepos={setCurrentRepos}
+            />
         </>
     )
 }
