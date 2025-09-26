@@ -28,8 +28,6 @@ router.get('/:username', async (req, res) => {
 
         if (userInDb) {     // CASE: User already in db
 
-            console.log("updated res: ", updated);
-
             if (updated && updated.status === 200) {           // if user data has changed
 
                 const updatedUser = await prisma.user.update({      // update db values
@@ -70,11 +68,7 @@ router.get('/:username', async (req, res) => {
 
             res.status(201).json({ "new user": newUser });      // return new user
 
-            } else {
-                console.log("fetch not valid");
-                res.status(404).json(null);
             }
-
         }
     } catch (error) {
         console.error(error);
