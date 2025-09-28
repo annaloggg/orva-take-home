@@ -2,10 +2,8 @@ import { RepoCard } from "./repoCard";
 
 export const RepoList = ({repos}) => {
 
-    console.log(repos.data);
-
     const repoCards = repos.data.map(repo =>
-        <li>
+        <li className="flex flex-col items-center" key={repo.id}>
             <RepoCard
                 name={repo.name}
                 desc={repo.description}

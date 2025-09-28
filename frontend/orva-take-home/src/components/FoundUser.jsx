@@ -17,6 +17,7 @@ export const FoundUser = () => {
     const [currentUser, setCurrentUser] = useState(null);
     const [currentRepos, setCurrentRepos] = useState(null);
     const [loading, setLoading] = useState(false);
+    const [currentPage, setCurrentPage] = useState(1);
 
     async function fetchGithubUserData() {
 
@@ -47,8 +48,9 @@ export const FoundUser = () => {
     async function fetchGithubUserRepos() {
         try {
             setLoading(true);
-            const repos = await octokit.request('GET /users/{username}/repos', {
+            const repos = await octokit.request('GET /users/{username}/repos?page={page}', {
                 username: params.username,
+                page: currentPage,
                 headers: { 'accept': 'application/vnd.github+json' }
             });
 
@@ -72,7 +74,6 @@ export const FoundUser = () => {
 
         const fetchData = async () => {
             const user = await fetchGithubUserData();
-            console.log(user);
             if (user) {
                 const repos = await fetchGithubUserRepos();
                 if (repos) {
@@ -87,21 +88,30 @@ export const FoundUser = () => {
 
         const res = fetchData();
 
-    }, [params]);
+    }, [params, currentPage]);
 
     return (
         <>
             {currentUser && currentRepos ? (
-                <>
-                    <UserDisplay user={currentUser} />
-                    <RepoList repos={currentRepos}/>
-                </>
+                <div className='font-Coolvetica bg-neutral-50'>
+                    <header className="flex flex-col justify-center items-center rounded-lg py-12">
+                        <UserDisplay user={currentUser} />
+                    </header>
+                    <RepoList repos={currentRepos} />
+                    <footer>
+                        <NavButtons
+                            numRepos={currentUser.data.public_repos}
+                            repos={currentRepos}
+                            setCurrentRepos={setCurrentRepos}
+                            currentPage={currentPage}
+                            setCurrentPage={setCurrentPage}
+                        />
+                    </footer>
+
+                </div>
             )
                 : <NotFoundPage />}
-            <NavButtons
-                repos={currentRepos}
-                setRepos={setCurrentRepos}
-            />
+
         </>
     )
 }
