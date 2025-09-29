@@ -133,11 +133,11 @@ export const FoundUser = () => {
                     </header>
                     <RepoList repos={displayedRepos ? displayedRepos : currentRepos} ref={reposRef} />
                     <footer>
-                        <NavButtons
+                        {numRepos > 30 ? <NavButtons
                             numberRepos={numRepos}
                             currentPage={currentPage}
                             setCurrentPage={setCurrentPage}
-                        />
+                        /> : <></>}
                     </footer>
 
                 </div>
