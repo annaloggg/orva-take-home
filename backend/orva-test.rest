@@ -1,7 +1,0 @@
-### Test add new user to db
-GET http://localhost:3001/api/octocat
-Content-Type: application/json
-
-### get mikey
-GET http://localhost:3001/api/michaelplazekkkk
-Content-Type: application/json
