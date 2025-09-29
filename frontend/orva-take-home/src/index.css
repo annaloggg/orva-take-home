@@ -4,5 +4,5 @@
   font-family: Coolvetica;
   font-style: normal;
   font-weight: normal;
-  src: url("../public/coolvetica\ rg.ttf") format("truetype");
+  src: url("/coolvetica.woff") format("woff");
 }

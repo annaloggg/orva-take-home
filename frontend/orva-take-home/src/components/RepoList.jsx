@@ -1,6 +1,7 @@
+import { forwardRef } from "react";
 import { RepoCard } from "./repoCard";
 
-export const RepoList = ({repos}) => {
+export const RepoList = forwardRef(({repos}, ref) => {
 
     const repoCards = repos.data.map(repo =>
         <li className="flex flex-col items-center" key={repo.id}>
@@ -15,7 +16,8 @@ export const RepoList = ({repos}) => {
     );
 
     return (
-        <ul>{repoCards}</ul>
+        <section ref={ref} className="h-32 flex-1 overflow-y-auto">
+            <ul>{repoCards}</ul>
+        </section>
     )
-
-}
+});

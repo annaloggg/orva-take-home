@@ -4,7 +4,7 @@ export const NavButtons = ({ numRepos, repos, setRepos, currentPage, setCurrentP
         if (currentPage != 1) {
             setCurrentPage(currentPage - 1);
         }
-        
+
     }
 
     const handleNextRepos = () => {
@@ -37,13 +37,13 @@ export const NavButtons = ({ numRepos, repos, setRepos, currentPage, setCurrentP
         const lastPage = getLastPage(lastPattern);
 
         return (
-            <div className="pb-12 flex flex-row justify-center items-center">
-               
-                    <button disabled={currentPage == 1} className={buttonStyle + (currentPage === 1 ? " cursor-not-allowed opacity-50" : " hover:bg-stone-300 ")} onClick={handlePrevRepos}>prev</button>
-                
+            <div className="py-6 flex flex-row justify-center items-center">
+
+                <button disabled={currentPage == 1} className={buttonStyle + (currentPage === 1 ? " cursor-not-allowed opacity-50" : " hover:bg-stone-300 ")} onClick={handlePrevRepos}>prev</button>
+
                 <h6>{currentPage}</h6>
-                
-                    <button disabled={currentPage >= lastPage} className={buttonStyle + (currentPage >= lastPage ? " cursor-not-allowed opacity-50" : " hover:bg-stone-300 ")}  onClick={handleNextRepos}>next</button>
+
+                <button disabled={currentPage >= lastPage} className={buttonStyle + (currentPage >= lastPage ? " cursor-not-allowed opacity-50" : " hover:bg-stone-300 ")} onClick={handleNextRepos}>next</button>
             </div>
         )
 

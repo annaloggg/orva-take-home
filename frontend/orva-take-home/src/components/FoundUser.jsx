@@ -1,10 +1,11 @@
-import { useEffect, useState } from 'react';
+import { useEffect, useRef, useState } from 'react';
 import { useParams } from 'react-router-dom';
 import { Octokit } from 'octokit';
 import { UserDisplay } from './userDisplay';
 import { RepoList } from './RepoList';
 import { NotFoundPage } from './NotFoundPage';
 import { NavButtons } from './NavButtons';
+import {LoadingPage} from './LoadingPage';
 
 export const FoundUser = () => {
 
@@ -18,6 +19,7 @@ export const FoundUser = () => {
     const [currentRepos, setCurrentRepos] = useState(null);
     const [loading, setLoading] = useState(false);
     const [currentPage, setCurrentPage] = useState(1);
+    const reposRef = useRef(null);
 
     async function fetchGithubUserData() {
 
@@ -71,7 +73,9 @@ export const FoundUser = () => {
     }
 
     useEffect(() => {
-
+        if (reposRef.current) {
+            reposRef.current.scrollTo({top: 0, left: 0, behavior: 'smooth'});
+        }
         const fetchData = async () => {
             const user = await fetchGithubUserData();
             if (user) {
@@ -93,11 +97,11 @@ export const FoundUser = () => {
     return (
         <>
             {currentUser && currentRepos ? (
-                <div className='font-Coolvetica bg-neutral-50'>
-                    <header className="flex flex-col justify-center items-center rounded-lg py-12">
+                <div className='h-screen font-Coolvetica bg-neutral-50 flex flex-col justify-between'>
+                    <header className="z-10 flex flex-col justify-center items-center py-6 shadow-sm">
                         <UserDisplay user={currentUser} />
                     </header>
-                    <RepoList repos={currentRepos} />
+                    <RepoList repos={currentRepos} ref={reposRef}/>
                     <footer>
                         <NavButtons
                             numRepos={currentUser.data.public_repos}
@@ -110,7 +114,10 @@ export const FoundUser = () => {
 
                 </div>
             )
-                : <NotFoundPage />}
+                : loading ?
+                <LoadingPage/>
+                :
+                <NotFoundPage />}
 
         </>
     )
