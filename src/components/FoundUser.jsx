@@ -5,7 +5,7 @@ import { UserDisplay } from './userDisplay';
 import { RepoList } from './RepoList';
 import { NotFoundPage } from './NotFoundPage';
 import { NavButtons } from './NavButtons';
-import {LoadingPage} from './LoadingPage';
+import { LoadingPage } from './LoadingPage';
 
 export const FoundUser = () => {
 
@@ -17,8 +17,12 @@ export const FoundUser = () => {
 
     const [currentUser, setCurrentUser] = useState(null);
     const [currentRepos, setCurrentRepos] = useState(null);
+    const [displayedRepos, setDisplayedRepos] = useState(null);
     const [loading, setLoading] = useState(false);
     const [currentPage, setCurrentPage] = useState(1);
+    const [pageMin, setPageMin] = useState(0);
+    const [pageMax, setPageMax] = useState(29);
+    const [numRepos, setNumRepos] = useState(0);
     const reposRef = useRef(null);
 
     async function fetchGithubUserData() {
@@ -50,9 +54,8 @@ export const FoundUser = () => {
     async function fetchGithubUserRepos() {
         try {
             setLoading(true);
-            const repos = await octokit.request('GET /users/{username}/repos?page={page}', {
+            const repos = await octokit.paginate('GET /users/{username}/repos', {
                 username: params.username,
-                page: currentPage,
                 headers: { 'accept': 'application/vnd.github+json' }
             });
 
@@ -72,10 +75,21 @@ export const FoundUser = () => {
         }
     }
 
+    function handleDisplayNext(repos) {
+
+            const repositories = repos ? repos : currentRepos;
+
+            const newMin = (currentPage-1) * 30;
+            const newMax = (currentPage * 30) - 1;
+            setPageMin(newMin);
+            setPageMax(newMax);
+            
+            const toBeDisplayed = repositories.slice(newMin, newMax);
+            setDisplayedRepos(toBeDisplayed);
+    }
+
+    // handle change in params
     useEffect(() => {
-        if (reposRef.current) {
-            reposRef.current.scrollTo({top: 0, left: 0, behavior: 'smooth'});
-        }
         const fetchData = async () => {
             const user = await fetchGithubUserData();
             if (user) {
@@ -83,16 +97,32 @@ export const FoundUser = () => {
                 if (repos) {
                     setCurrentUser(user);
                     setCurrentRepos(repos);
+                    setNumRepos(user.data.public_repos);
+                    handleDisplayNext(repos);
+
                     return true;
                 }
             }
 
+
+
             return false;
         }
 
-        const res = fetchData();
+        fetchData();
 
-    }, [params, currentPage]);
+    }, [params]);
+
+    // handle change in page
+    useEffect(() => {
+
+        if (reposRef.current) {
+            reposRef.current.scrollTo({ top: 0, left: 0, behavior: 'smooth' });
+        }
+
+        if (currentRepos) { handleDisplayNext(); }
+
+    }, [currentPage]);
 
     return (
         <>
@@ -101,12 +131,10 @@ export const FoundUser = () => {
                     <header className="z-10 flex flex-col justify-center items-center py-6 shadow-sm">
                         <UserDisplay user={currentUser} />
                     </header>
-                    <RepoList repos={currentRepos} ref={reposRef}/>
+                    <RepoList repos={displayedRepos ? displayedRepos : currentRepos} ref={reposRef} />
                     <footer>
                         <NavButtons
-                            numRepos={currentUser.data.public_repos}
-                            repos={currentRepos}
-                            setCurrentRepos={setCurrentRepos}
+                            numberRepos={numRepos}
                             currentPage={currentPage}
                             setCurrentPage={setCurrentPage}
                         />
@@ -115,9 +143,9 @@ export const FoundUser = () => {
                 </div>
             )
                 : loading ?
-                <LoadingPage/>
-                :
-                <NotFoundPage />}
+                    <LoadingPage />
+                    :
+                    <NotFoundPage />}
 
         </>
     )

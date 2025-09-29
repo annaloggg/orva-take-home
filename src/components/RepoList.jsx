@@ -3,7 +3,7 @@ import { RepoCard } from "./repoCard";
 
 export const RepoList = forwardRef(({repos}, ref) => {
 
-    const repoCards = repos.data.map(repo =>
+    const repoCards = repos.map(repo =>
         <li className="flex flex-col items-center" key={repo.id}>
             <RepoCard
                 name={repo.name}
