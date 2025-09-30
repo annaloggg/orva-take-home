@@ -3,7 +3,7 @@ Retrieves GitHub user data and displays all public repositories with links
 
 ## Dependencies
 Requires:
-- NodeJS (version >=6.9.0)
+- NodeJS (version >=19.1.1)
 - npm (Node Package Manager)
 
 ## Steps to run
