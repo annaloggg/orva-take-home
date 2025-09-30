@@ -1,29 +1,30 @@
-import js from '@eslint/js'
-import globals from 'globals'
-import reactHooks from 'eslint-plugin-react-hooks'
-import reactRefresh from 'eslint-plugin-react-refresh'
-import { defineConfig, globalIgnores } from 'eslint/config'
+import js from '@eslint/js';
+import globals from 'globals';
+import pluginReact from 'eslint-plugin-react';
+import { defineConfig } from 'eslint/config';
+import react from 'eslint-plugin-react';
+import reactHooks from 'eslint-plugin-react-hooks';
+import prettierConfig from 'eslint-config-prettier';
 
 export default defineConfig([
-  globalIgnores(['dist']),
-  {
-    files: ['**/*.{js,jsx}'],
-    extends: [
-      js.configs.recommended,
-      reactHooks.configs['recommended-latest'],
-      reactRefresh.configs.vite,
-    ],
-    languageOptions: {
-      ecmaVersion: 2020,
-      globals: globals.browser,
-      parserOptions: {
-        ecmaVersion: 'latest',
-        ecmaFeatures: { jsx: true },
-        sourceType: 'module',
-      },
+    {
+        files: ['**/*.{js,mjs,cjs,jsx}'],
+        plugins: {
+            js,
+            react,
+            reactHooks,
+        },
+        rules: {
+            ...react.configs.recommended.rules,
+            ...reactHooks.configs.recommended.rules,
+            'react/react-in-jsx-scope': 'off',
+            'react/prop-types': 'off',
+            semi: 'warn',
+            'no-unused-vars': 'warn',
+        },
+        extends: ['js/recommended'],
+        languageOptions: { globals: { ...globals.browser, ...globals.node } },
     },
-    rules: {
-      'no-unused-vars': ['error', { varsIgnorePattern: '^[A-Z_]' }],
-    },
-  },
-])
+    prettierConfig,
+    pluginReact.configs.flat.recommended,
+]);

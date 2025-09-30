@@ -1,9 +1,11 @@
-import { forwardRef } from "react";
-import { RepoCard } from "./repoCard";
+/* eslint-disable react/prop-types */
+/* eslint-disable react/display-name */
+/* eslint-disable react/react-in-jsx-scope */
+import { forwardRef } from 'react';
+import { RepoCard } from './repoCard';
 
-export const RepoList = forwardRef(({repos}, ref) => {
-
-    const repoCards = repos.map(repo =>
+export const RepoList = forwardRef(({ repos }, ref) => {
+    const repoCards = repos.data.map((repo) => (
         <li className="flex flex-col items-center" key={repo.id}>
             <RepoCard
                 name={repo.name}
@@ -13,11 +15,11 @@ export const RepoList = forwardRef(({repos}, ref) => {
                 url={repo.html_url}
             />
         </li>
-    );
+    ));
 
     return (
         <section ref={ref} className="h-32 flex-1 overflow-y-auto">
             <ul>{repoCards}</ul>
         </section>
-    )
+    );
 });
