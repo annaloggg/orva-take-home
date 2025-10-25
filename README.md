@@ -1,5 +1,5 @@
 ## Orva Take Home
-Retrieves GitHub user data and displays all public repositories with links
+Retrieves GitHub user data and displays all public repositories with links to the user profile and repository pages
 ![screenshot displaying user interface with GitHub user data and repos](/public/ex.png)
 
 ## Dependencies
